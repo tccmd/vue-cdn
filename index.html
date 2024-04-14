@@ -3,130 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vue Cdn</title>
+    <title>Vue ES6 Modules</title>
 </head>
 <body>
-    <!-- localhost:8080 -->
-    <div id="app">
-        {{ message }}
-        <my-component></my-component>
-        <my-component-global></my-component-global>
-        <my-cmp></my-cmp>
-        <child-componet v-bind:propsdata="propsMessage"></child-componet>
-
-        <router-link to="/home">홈</router-link>
-        <router-link to="/about">소개</router-link>
-        <router-link to="/nested">중첩 레이아웃</router-link>
-        <router-link to="/named-router">네임드 라우터</router-link>
-
-        <!-- <router-view></router-view> -->
-
-        <router-view name="appHeader"></router-view>
-        <router-view></router-view>
-        <router-view name="appFooter"></router-view>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router@3.0.0/dist/vue-router.js"></script>
-    <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
-    <script>
-        // 전역 컴포넌트 등록 방식
-        Vue.component("my-component-global", {
-            // 컴포넌트 내용
-            template: "<div>A global component</div>",
-        })
-        // 지역 컴포넌트 등록 방식
-        var cmp = {
-            // 컴포넌트 내용
-            template: "<div>A local component</div>",
-        }
-
-        // 하위 컴포넌트
-        Vue.component("child-componet", {
-            // 상위 컴포넌트의 data 속성인 message를 propsdata라는 속성으로 넘겨받음
-            props: ["propsdata"],
-            template: '<p>{{ propsdata }}</p>'
-        })
-
-        var Main = {
-            template: `
-                <div>
-                    <p>Main Component rendered</p>
-                    <router-view></router-view>
-                </div>
-            `,
-        }
-
-        var AppHeader = {
-            template: `
-                <div>
-                    <p>AppHeader component</p>
-                    <router-link to="/nested/list">리스트</router-link>
-                </div>
-            `,
-        }
-
-        var List = {
-            template: "<p>List component</p>"
-        }
-
-        var Body = {
-            template: "<p>Body component</p>"
-        }
-
-        var AppFooter = {
-            template: "<p>AppFooter component</p>"
-        }
-
-        
-        // 라우터 인스턴스 생성
-        var router = new VueRouter({
-            mode: "history",
-            routes: [
-                { path: '/home', component: { template: '<div>홈 페이지</div>' } },
-                { path: '/about', component: { template: '<div>소개 페이지</div>' } },
-                // 'localhost:8080/nested'에 접근하면 Main과 Header 컴포넌트 둘다 표시된다
-                { 
-                    path: '/nested', 
-                    component: Main,
-                    children: [
-                        {
-                            path: '/',
-                            component: AppHeader
-                        },
-                        {
-                            path: '/list',
-                            component: List
-                        },
-                    ]
-                },
-                {
-                    path: '/named-router',
-                    components: {
-                        appHeader: AppHeader,
-                        default: Body,
-                        appFooter: AppFooter
-                    }
-                }
-            ]
-        })
-        // 뷰 인스턴스 생성
-        var app = new Vue({
-            router: router,
-            el: "#app",
-            data: {
-                message: "Hello Vue.Js!",
-                propsMessage: "Hello Vue! from Parent Component",
-            },
-            // 컴포넌트 등록 코드
-            components: {
-                // '컴포넌트 이름': 컴포넌트 내용
-                "my-component": {
-                    template: "<div>A custom component!</div>"
-                },
-                "my-cmp": cmp
+    <!-- importmap 활성화 -->
+    <script type="importmap">
+        {
+            "imports": {
+                "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
             }
-        });
+        }
+    </script>
+
+    <div id="app">{{ message }}</div>
+
+    <script type="module">
+        // ES 모듈 빌드 사용
+        // import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+        
+        // importmap 활성화
+        import { createApp } from 'vue'
+
+        // 모듈 분할
+        import MyComponent from './components/js-components/my-component.js'
+
+        // ES 모듈 빌드 사용, importmap 활성화
+        // createApp({
+        //     data() {
+        //         return {
+        //             message: 'Hello Vue!'
+        //         }
+        //     }
+        // }).mount('#app')
+
+        // 모듈 분할
+        createApp(MyComponent).mount('#app')
     </script>
 </body>
 </html>
