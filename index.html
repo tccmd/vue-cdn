@@ -1,43 +1,35 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vue ES6 Modules</title>
+    <title>Vue Cdn</title>
 </head>
-<body>
-    <!-- importmap 활성화 -->
-    <script type="importmap">
-        {
-            "imports": {
-                "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
-            }
-        }
-    </script>
 
-    <div id="app">{{ message }}</div>
+<body>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+
+    <div id="app"></div>
 
     <script type="module">
-        // ES 모듈 빌드 사용
-        // import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
-        
-        // importmap 활성화
-        import { createApp } from 'vue'
+        import MainComponent from './components-js/main-component.js'
+        import MyComponent from './components-js/my-component.js'
 
-        // 모듈 분할
-        import MyComponent from './components/js-components/my-component.js'
+        const { createApp } = Vue
+        const router = VueRouter.createRouter({
+            history: VueRouter.createWebHashHistory(),
+            routes: [
+                { path: '/', component: MainComponent },
+                { path: '/my-component', component: MyComponent }
+            ]
+        })
 
-        // ES 모듈 빌드 사용, importmap 활성화
-        // createApp({
-        //     data() {
-        //         return {
-        //             message: 'Hello Vue!'
-        //         }
-        //     }
-        // }).mount('#app')
-
-        // 모듈 분할
-        createApp(MyComponent).mount('#app')
+        const app = createApp(MainComponent)
+        app.use(router)
+        app.mount('#app')
     </script>
 </body>
+
 </html>
